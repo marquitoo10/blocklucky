@@ -1,5 +1,7 @@
-const CONTRACT_ADDRESS = "0x5FbDB2315678afecb367f032d93F642f64180aa3";
+// Adresse du contrat déployé sur Hardhat local
+const CONTRACT_ADDRESS = "0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512";
 
+// ABI du contrat BlockLucky
 const ABI = [
   {
     "inputs":[
@@ -16,8 +18,9 @@ const ABI = [
 
 let provider, signer, contract;
 
+// Connexion à MetaMask
 async function connectWallet() {
-  if (typeof window.ethereum === "undefined") {
+  if (!window.ethereum) {
     alert("⚠️ MetaMask non détecté !");
     return;
   }
@@ -28,28 +31,46 @@ async function connectWallet() {
     signer = provider.getSigner();
     const address = await signer.getAddress();
     console.log("✅ Connecté :", address);
+
     contract = new ethers.Contract(CONTRACT_ADDRESS, ABI, signer);
     alert("✅ MetaMask connecté !");
-    refresh();
+    await refresh();
   } catch (err) {
     console.error("Erreur MetaMask :", err);
     alert("❌ Connexion échouée : " + err.message);
   }
 }
 
+// Actualiser l’UI avec ticketPrice et nombre de joueurs
 async function refresh() {
   if (!contract) return;
-  const price = await contract.ticketPrice();
-  document.getElementById("price").textContent = ethers.utils.formatEther(price);
-  const players = await contract.getPlayers();
-  document.getElementById("players").textContent = players.length;
+  try {
+    const price = await contract.ticketPrice();
+    document.getElementById("price").textContent = ethers.utils.formatEther(price);
+
+    const players = await contract.getPlayers();
+    document.getElementById("players").textContent = players.length;
+  } catch (err) {
+    console.error("Erreur refresh :", err);
+    alert("❌ Impossible de récupérer le ticket price. Vérifie le contrat et le réseau MetaMask !");
+  }
 }
 
+// Acheter un ticket
 async function buyTicket() {
   if (!contract) return alert("Connecte ton wallet d'abord !");
-  const price = await contract.ticketPrice();
-  const tx = await contract.buyTicket({ value: price });
-  await tx.wait();
-  alert("🎟️ Ticket acheté !");
-  refresh();
+  try {
+    const price = await contract.ticketPrice();
+    const tx = await contract.buyTicket({ value: price });
+    await tx.wait();
+    alert("🎟️ Ticket acheté !");
+    await refresh();
+  } catch (err) {
+    console.error("Erreur achat :", err);
+    alert("❌ Achat échoué : " + (err.reason || err.message));
+  }
 }
+
+// Attacher aux boutons HTML
+document.getElementById("connectBtn").onclick = connectWallet;
+document.getElementById("buyBtn").onclick = buyTicket;
