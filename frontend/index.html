@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>🎰 BlockLucky - Loterie Décentralisée</title>
+
+  <!-- ⚡ Charger ethers.js AVANT app.js -->
+  <script src="https://cdn.jsdelivr.net/npm/ethers@5.7.2/dist/ethers.umd.min.js"></script>
+  <script defer src="app.js"></script>
+</head>
+<body>
+  <h1>🎰 BlockLucky 🎰</h1>
+
+  <button onclick="connectWallet()">Se connecter à MetaMask</button>
+  <p>Prix du ticket : <span id="price">...</span> ETH</p>
+  <p>Nombre de joueurs : <span id="players">0</span></p>
+  <button onclick="buyTicket()">Acheter un ticket</button>
+
+  <ul id="playerList"></ul>
+</body>
+</html>
