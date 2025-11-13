@@ -3,17 +3,20 @@
 <head>
   <meta charset="UTF-8">
   <title>🎰 BlockLucky - Loterie Décentralisée</title>
+  <link rel="stylesheet" href="style.css">
   <script src="https://cdn.jsdelivr.net/npm/ethers@5.7.2/dist/ethers.umd.min.js"></script>
   <script defer src="app.js"></script>
 </head>
 <body>
   <h1>🎰 BlockLucky 🎰</h1>
 
-  <button id="connectBtn">Se connecter à MetaMask</button>
-  <p>Prix du ticket : <span id="price">...</span> ETH</p>
-  <p>Nombre de joueurs : <span id="players">0</span></p>
-  <button id="buyBtn">Acheter un ticket</button>
+  <div class="container">
+    <button id="connectBtn">Se connecter à MetaMask</button>
+    <p>Prix du ticket : <span id="price">...</span> ETH</p>
+    <p>Nombre de joueurs : <span id="players">0</span></p>
+    <button id="buyBtn">Acheter un ticket</button>
 
-  <ul id="playerList"></ul>
+    <ul id="playerList"></ul>
+  </div>
 </body>
 </html>
