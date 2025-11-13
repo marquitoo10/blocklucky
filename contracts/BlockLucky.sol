@@ -1,4 +1,3 @@
-// SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 
 contract BlockLucky {
@@ -20,22 +19,18 @@ contract BlockLucky {
         require(msg.value == ticketPrice, "Ticket costs exactly the ticket price");
         players.push(msg.sender);
         emit TicketBought(msg.sender);
-
         if (players.length == maxPlayers) {
             selectWinner();
         }
     }
 
-    function selectWinner() internal {
+    function selectWinner(uint256 _seed) internal {
         uint randomIndex = uint(keccak256(abi.encodePacked(block.timestamp, msg.sender, players))) % players.length;
         address winner = players[randomIndex];
         uint balance = address(this).balance;
-
         delete players;
-
         (bool success, ) = payable(winner).call{value: balance}("");
         require(success, "Transfer failed");
-
         emit WinnerSelected(winner, balance);
     }
 
